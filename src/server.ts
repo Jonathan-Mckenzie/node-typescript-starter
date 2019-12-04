@@ -1,14 +1,14 @@
-// used to handle .env variables
-import morgan from 'morgan';
 import * as dotenv from 'dotenv';
-dotenv.config();
 import express from 'express';
-const app = express();
+import morgan from 'morgan';
 import {setCors, setOrigin} from './cors';
 import nocache from 'nocache';
 import * as bodyParser from 'body-parser';
 import {logger} from './logger';
 import * as controller from './controllers/controller';
+
+dotenv.config(); // used to handle .env variables (should be executed as early as possible)
+const app = express();
 
 app.use(setOrigin);
 app.use(setCors);
