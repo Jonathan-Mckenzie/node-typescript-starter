@@ -1,6 +1,4 @@
-import * as dotenv from 'dotenv';
-dotenv.config(); // used to handle .env variables (should be executed as early as possible)
-
+import environment from './environment'; // keep this as first import on server.ts as it resolves environment
 import express from 'express';
 import morgan from 'morgan';
 import {setCors, setOrigin} from './cors';
@@ -13,7 +11,12 @@ const app = express();
 
 app.use(setOrigin);
 app.use(setCors);
-app.use(morgan('common', {stream: {write: (text: string) => logger.info(text) } }));
+app.use(
+    morgan(
+        ':method ":url" :status (:res[content-length] length) (:response-time ms)',
+        {stream: {write: (text: string) => logger.info(text) } }
+    )
+);
 
 // support json in body
 app.use(bodyParser.json());
@@ -26,7 +29,7 @@ app.use(nocache());
 app.get('/', controller.hello);
 
 app.listen(
-    parseInt(process.env.PORT, 10),
-    process.env.HOSTNAME,
-    () => logger.info(`Server listening on port ${process.env.PORT}`)
+    environment.port,
+    environment.hostname,
+    () => logger.info(`Server listening on port ${environment.port}`)
 );

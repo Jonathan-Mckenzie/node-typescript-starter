@@ -1,45 +1,55 @@
 import * as winston from 'winston';
 import * as fs from 'fs';
+import environment from './environment';
+const util = require('util');
 
-const LOG_DIR = 'winston.logs';
-const isProduction = process.env.NODE_ENV === 'production';
+const myFormat = winston.format.printf(({ level, message, label, timestamp, ...rest }) => {
+    // @ts-ignore - Type 'symbol' cannot be used as an index type
+    const splat = rest[Symbol.for('splat')];
+    const strArgs = splat ? splat.map((s) => util.formatWithOptions({ colors: true, depth: 10 }, s)).join(' ') : '';
+    return `${timestamp}  ${level}  ${util.formatWithOptions({ colors: true, depth: 10}, message)} ${strArgs}`;
+});
 
-if (isProduction) {
-    // check if logs dir exists
-    if (!fs.existsSync(LOG_DIR)) {
-        fs.mkdirSync(LOG_DIR);
-    }
-}
-
-const format = winston.format.combine(
-    winston.format.simple(),
+const loggerFormat = winston.format.combine(
     winston.format.colorize(),
+    winston.format.timestamp({
+        format: 'YYYY-M-DD HH:mm:ss',
+    }),
+    myFormat
 );
 
-// send everything to console
-const debugLogger = winston.createLogger({
-    level: 'silly',
-    transports: [
-        new winston.transports.Console(),
-    ],
-    format
-});
 
-// send everything to log files (no 'debug' only info and errors)
-const prodLogger = winston.createLogger({
-    transports: [
-        new winston.transports.File({
-            dirname: LOG_DIR,
-            filename: 'log',
-            level: 'info',
-        }),
-        new winston.transports.File({
-            dirname: LOG_DIR,
-            filename: 'error',
-            level: 'error',
-        })
-    ],
-    format
-});
+export let logger;
+if (environment.isProduction) {
+    // production => create logging dirs, logger logs to log/error files
+    // check if logs dir exists
+    if (!fs.existsSync(environment.logDir)) {
+        fs.mkdirSync(environment.logDir);
+    }
+    logger = winston.createLogger({
+        transports: [
+            new winston.transports.File({
+                level: 'info',
+                dirname: environment.logDir,
+                filename: 'info.log',
 
-export const logger = (isProduction) ? prodLogger : debugLogger;
+            }),
+            new winston.transports.File({
+                level: 'error',
+                dirname: environment.logDir,
+                filename: 'error.log',
+            })
+        ],
+        format: loggerFormat,
+    });
+
+} else {
+    // development => log everything to the console
+    logger = winston.createLogger({
+        level: 'silly',
+        transports: [
+            new winston.transports.Console(),
+        ],
+        format: loggerFormat,
+    });
+}

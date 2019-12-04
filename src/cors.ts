@@ -1,26 +1,22 @@
 import {Request, Response, NextFunction} from 'express';
 import cors from 'cors';
+import environment from './environment';
+import removeHttpPrefix from './utilities/removeHttpPrefix';
 
-const whitelist: Set<string> = new Set(
-    // comma-separated host names
-    (process.env.WHITELIST || '').split(
-            ','
-    ).concat(
-        `${process.env.HOSTNAME}:${process.env.PORT}` // add server host name
-    ).map( (hostname) =>
-        // removes http:// and https://
-        hostname.replace(/^(http|https):\/\//gi, '')
-    ),
-);
+const whitelistStr: string = Array.from(environment.whitelist).toString();
+const generateCorsError = (origin: string): Error => {
+    return new Error(`${origin} not allowed by CORS, allowed hosts: ${whitelistStr}`);
+};
 
 const corsOptions: cors.CorsOptions = {
     allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'X-Access-Token', 'Authorization'],
     methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
     preflightContinue: false,
     origin: (origin, callback) => {
-        whitelist.has(origin.replace(/^(http|https):\/\//gi, ''))
+        const originProcessed = removeHttpPrefix(origin);
+        environment.whitelist.has(originProcessed)
             ? callback(null, true)
-            : callback(new Error(`Not allowed by CORS: ${origin}`));
+            : callback(generateCorsError(originProcessed));
     },
 };
 
