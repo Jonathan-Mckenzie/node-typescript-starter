@@ -4,11 +4,13 @@ import cors from 'cors';
 const whitelist: Set<string> = new Set(
     // comma-separated host names
     (process.env.WHITELIST || '').split(
-        ','
+            ','
+    ).concat(
+        `${process.env.HOSTNAME}:${process.env.PORT}` // add server host name
     ).map( (hostname) =>
         // removes http:// and https://
         hostname.replace(/^(http|https):\/\//gi, '')
-    )
+    ),
 );
 
 const corsOptions: cors.CorsOptions = {
@@ -18,7 +20,7 @@ const corsOptions: cors.CorsOptions = {
     origin: (origin, callback) => {
         whitelist.has(origin.replace(/^(http|https):\/\//gi, ''))
             ? callback(null, true)
-            : callback(new Error('Not allowed by CORS'));
+            : callback(new Error(`Not allowed by CORS: ${origin}`));
     },
 };
 

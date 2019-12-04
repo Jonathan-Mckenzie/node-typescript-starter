@@ -22,11 +22,11 @@ cd <project_name>
 npm install
 ```
 
-- Prepare the environment variables by updating `.env`
-    
+- Prepare the environment variables by updating `.env`  
     `NODE_ENV`: the node environment "development" or "production"  
-    `SERVER_PORT`: port that node runs on e.g. 8080  
-    `WHITELIST`: comma-seprated host names, e.g."http://localhost:8080,https://postwoman.io"  
+    `HOSTNAME`: the node hostname e.g. "localhost"  
+    `PORT`: port that node runs on e.g. 8080  
+    `WHITELIST`: comma-separated host names, e.g."http://localhost:3000,https://postwoman.io"    
     
 ## Development
 Launch in separate terminals:

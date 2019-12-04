@@ -1,4 +1,6 @@
 import * as dotenv from 'dotenv';
+dotenv.config(); // used to handle .env variables (should be executed as early as possible)
+
 import express from 'express';
 import morgan from 'morgan';
 import {setCors, setOrigin} from './cors';
@@ -7,7 +9,6 @@ import * as bodyParser from 'body-parser';
 import {logger} from './logger';
 import * as controller from './controllers/controller';
 
-dotenv.config(); // used to handle .env variables (should be executed as early as possible)
 const app = express();
 
 app.use(setOrigin);
@@ -24,4 +25,8 @@ app.use(nocache());
 
 app.get('/', controller.hello);
 
-app.listen(process.env.SERVER_PORT, () => logger.info(`Server listening on port ${process.env.SERVER_PORT}`));
+app.listen(
+    parseInt(process.env.PORT, 10),
+    process.env.HOSTNAME,
+    () => logger.info(`Server listening on port ${process.env.PORT}`)
+);
