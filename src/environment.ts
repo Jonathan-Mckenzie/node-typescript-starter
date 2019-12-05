@@ -1,6 +1,5 @@
-import * as dotenv from 'dotenv';
+require('dotenv').config(); // used to handle .env file that are set into 'process.env'
 import removeHttpPrefix from './utilities/removeHttpPrefix';
-dotenv.config(); // used to handle .env file that are set into 'process.env'
 
 interface IEnvironment {
     isProduction: boolean;
