@@ -10,11 +10,12 @@ A starter app for your next node.js API project.
 - JSON Body parsing
 - Dotenv environment variables
 - [Routing-Controllers](https://github.com/typestack/routing-controllers)
+- API Unit Testing with [JEST](https://github.com/facebook/jest)
 
 ## Getting started
 - Clone the repository
 ```
-git clone --depth=1 https://github.com/Jonathan-Mckenzie/node-typescript-starter.git <project_name>
+git clone https://github.com/Jonathan-Mckenzie/node-typescript-starter.git <project_name>
 ```
 - Install dependencies
 ```
@@ -42,5 +43,12 @@ Supports reloading on source edits
 -   `npm run build`
 
 Node script located: `dist/server.js`
+
+## Testing
+Any file name containing `test` will be ran using `ts-jest`
+-   `npm run test` to run once  
+-   `npm run test-watch` to continuously run after edits  
+
+
 
     
