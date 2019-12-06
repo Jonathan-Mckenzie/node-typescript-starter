@@ -10,7 +10,7 @@ A starter app for your next node.js API project.
 - JSON Body parsing
 - Dotenv environment variables
 - [Routing-Controllers](https://github.com/typestack/routing-controllers)
-- API Unit Testing with [JEST](https://github.com/facebook/jest)
+- API Unit Testing with [JEST](https://github.com/facebook/jest) and [supertest](https://github.com/visionmedia/supertest)
 
 ## Getting started
 - Clone the repository
