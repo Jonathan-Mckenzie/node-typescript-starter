@@ -13,7 +13,7 @@ const hostname =  (process.env.HOSTNAME || 'localhost');
 const port = (parseInt(process.env.PORT, 10) || 8080);
 
 const environment: IEnvironment = {
-    isProduction: (process.env.NODE_ENV || 'development') !== 'development',
+    isProduction: (process.env.NODE_ENV || 'development') === 'production',
     hostname,
     port,
     whitelist: new Set(

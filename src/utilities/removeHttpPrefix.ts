@@ -1,2 +1,2 @@
-export default (hostname: string): string => hostname.replace(/^(http|https):\/\//gi, '');
+export default (hostname: string): string => hostname?.replace(/^(http|https):\/\//gi, '');
 

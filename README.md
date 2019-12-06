@@ -9,7 +9,7 @@ A starter app for your next node.js API project.
 - CORS support
 - JSON Body parsing
 - Dotenv environment variables
-- Controllers
+- [Routing-Controllers](https://github.com/typestack/routing-controllers)
 
 ## Getting started
 - Clone the repository
