@@ -5,18 +5,20 @@
     ],
     "jsRules": {},
     "rules": {
-        "interface-name": [false],
+        "interface-name": [true],
         "no-console": [false],
         "quotemark": [true, "single"],
-        "prefer-for-of": false,
+        "prefer-for-of": true,
         "object-literal-sort-keys": false,
         "no-var-requires": false,
-        "no-empty": false,
-        "no-trailing-whitespace": false,
+        "no-empty": true,
+        "no-trailing-whitespace": [true, "ignore-blank-lines"],
         "no-consecutive-blank-lines": false,
         "ordered-imports": false,
-        "trailing-comma": false,
-        "member-access": false
+        "trailing-comma": true,
+        "member-access": false,
+        "whitespace": [true, "check-separator", "check-branch"],
+        "variable-name": [true, "allow-leading-underscore", "allow-pascal-case"]
     },
     "rulesDirectory": []
 }

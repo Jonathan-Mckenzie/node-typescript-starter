@@ -1,20 +1,28 @@
-import environment from './environment'; // keep this as first import on server.ts as it resolves environment
 import 'reflect-metadata';
 import express from 'express';
 import morgan from 'morgan';
-import {setCors, setOrigin} from './cors';
 import nocache from 'nocache';
-import {logger} from './logger';
 import {useExpressServer} from 'routing-controllers';
-import {HelloController} from './controllers/hello-controller/HelloController';
+import {StatusController} from './controllers/status-controller/StatusController';
+import {RootController} from './controllers/root-controller/RootController';
+import {CorsService} from './services/cors/cors.service';
+import {Container} from 'typedi';
+import {EnvironmentService} from './services/environment/environment.service';
+import {LoggerService} from './services/logger/logger.service';
+
+
 
 export default (corsEnabled: boolean) => {
     const app = express();
 
+    const cors = Container.get(CorsService);
+    const environment = Container.get(EnvironmentService);
+    const logger = Container.get(LoggerService);
+
     // pre-controller global middleware
     if (corsEnabled) {
-        app.use(setOrigin);
-        app.use(setCors);
+        app.use(cors.buildSetOrigin());
+        app.use(cors.buildSetCors());
     }
     app.use(nocache());
     app.use(
@@ -26,10 +34,11 @@ export default (corsEnabled: boolean) => {
 
     useExpressServer(app, {
         cors: corsEnabled,
-        development: !environment.isProduction,
+        development: !(environment.isProduction),
         controllers: [
-            HelloController
-        ]
+            RootController,
+            StatusController,
+        ],
     });
 
     return app;

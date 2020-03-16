@@ -1,9 +1,19 @@
-import environment from './environment'; // keep this as first import on server.ts as it resolves environment
+// @ts-ignore
 import request from 'supertest';
 import app from './app';
 import {Response} from 'supertest';
+import {Container} from 'typedi';
+import {LoggerService} from './services/logger/logger.service';
+import {EnvironmentService} from './services/environment/environment.service';
+
 
 describe('App should be able to launch', () => {
+
+    const logger = Container.get(LoggerService);
+    const environment = Container.get(EnvironmentService);
+
+    logger.info('Testing app: ', JSON.stringify(environment));
+
     it('should be able to spin up the app server without cors', async () => {
         const response: Response = await request(app(false))
             .get('/');
@@ -20,5 +30,4 @@ describe('App should be able to launch', () => {
         expect(response.text).toContain('not allowed by CORS');
     });
 });
-
 
